@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.cczq.booksearch.BookSearchListActivity;
+import com.cczq.booksearch.MainActivity;
 import com.cczq.booksearch.R;
 import com.cczq.booksearch.codescan.MipcaActivityCapture;
 import com.cczq.booksearch.utils.MapUtil;
@@ -71,16 +72,19 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
 
     int[] gids;
 
-    public String startPoint;  //存储开始点
-    public String endPoint;   //存储结束点
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-//        setContentView(R.layout.activity_main);
 
-//        initMap();
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        map.onDestory();
     }
 
     @Override
@@ -89,16 +93,15 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
         super.onResume();
 //        map.openMapById("00205100000590132"); //处理bug
 //        refreshMap();
-        initMap();
+//        initMap();
     }
-
 
      @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_book, container, false);
 
         mapView = (FMMapView) view.findViewById(R.id.mapview); // 与xml建立连接IU控件
-//        initMap();
+        initMap();
 
         menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id.multiple_actions);
         search_button = (FloatingActionButton) view.findViewById(R.id.search_button);
@@ -130,7 +133,7 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
     }
 
     //初始化地图
-    private void initMap()
+    public void initMap()
     {
         // 拷贝地图
         String dstDir = FMDataManager.getDefaultMapDirectory() + "00205100000590132/";
@@ -141,13 +144,9 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
         map.openMapById("00205100000590132");
         map.setOnFMMapInitListener(this);
     }
+
     //添加标志点  i = 0表示设置起点
     public void addPoint(String point, int i) {
-
-        if(i == 0)  //开始点
-            startPoint = point;
-        if(i == 1)  //结束点
-            endPoint = point;
 
         int groupId = 1;
 
@@ -158,6 +157,23 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
         for (FMSearchResult info : set) { // 遍历搜索结果
 
             String fid = (String) info.get("fid");
+            /////////
+            if(i == 0)
+            {
+
+                MainActivity activity = (MainActivity)getActivity();
+                if(activity.oldStartModelFid != null)
+                    cleanColorModel(activity.oldStartModelFid);
+                activity.oldStartModelFid = fid;
+            }
+            if(i == 1)
+            {
+                MainActivity activity = (MainActivity)getActivity();
+                if(activity.oldEndModelFid != null)
+                    cleanColorModel(activity.oldEndModelFid);
+                activity.oldEndModelFid = fid;
+            }
+            ////////
             int gid = (Integer) info.get("gid");
             FMModel model = map.getFMLayerProxy().queryFMModelByFid(fid);
             FMMapCoord coord = null;
@@ -168,7 +184,6 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
                         .show(); // 输出例子书架提醒
 
             } else if (i == 0) { // 添加起点
-
                 if (startPt != null)
                     clear();
                 startPt = coord;
@@ -181,8 +196,7 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
                 style.setImageFromAssets("ico_start.png");
                 // 设置标注物位于模型之上，默认就是位于地面之上
                 MapUtil.addMarker(mlForNaviStart, startPt, style, map); // 起点图层，开始点坐标，样式
-
-            } else if (i == 1) {
+            } else if (i == 1) {   //添加结束点
                 if (endPt != null)
                     clear();
                 endPt = coord;
@@ -194,13 +208,13 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
                 FMImageMarkerStyle style = new FMImageMarkerStyle(); // 图片名字
                 style.setImageFromAssets("ico_end.png");
                 MapUtil.addMarker(mlForNaviEnd, endPt, style, map);
-
             }
-
+//            model.getColor();
+            MainActivity activity = (MainActivity)getActivity();
+            activity.defaultColor = model.getColor();
             model.setColor(Color.rgb(255, 0, 0)); // 设置模型颜色，红色
             navi_Line();  //生成导航线
             map.updateMap();  //更新地图
-
         }
     }
 
@@ -258,7 +272,7 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
         // TODO Auto-generated method stub
         searchAnalyser = new FMSearchAnalyser(map); // 初始化搜索分析器
         map.updateMap(); // 更新
-        refreshMap();
+//        refreshMap();
     }
 
     @Override
@@ -268,14 +282,12 @@ public class BookFragment extends Fragment implements OnFMMapInitListener {
 
     }
 
-    //刷新地图
-    public void refreshMap()
+
+    //清楚fid模型的颜色
+    public void cleanColorModel(String fid)
     {
-        if(startPoint != null)
-            addPoint(startPoint, 0);
-        if(endPoint != null)
-            addPoint(endPoint, 1);
+        MainActivity activity = (MainActivity)getActivity();
+        FMModel model = map.getFMLayerProxy().queryFMModelByFid(fid);
+        model.setColor(activity.defaultColor);
     }
-
-
 }

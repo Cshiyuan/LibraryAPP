@@ -41,6 +41,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Menu mMenu;
     private Fragment myFragment;
 
+
+    public String oldStartModelFid;
+    public String oldEndModelFid;
+    public int defaultColor;
+
+
 //    @BindView(R.id.toolbar)
     Toolbar toolbar;
 //    @BindView(R.id.root)
@@ -129,6 +135,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ((TextView) findViewById(R.id.titleBar)).setText("图书");
                 ((CanaroTextView) findViewById(R.id.group)).setTextAppearance(this, R.style.TextView_GuillotineItem_Selected);
                 jumpToFragment = new BookFragment();
+//                BookFragment bookFragment = (BookFragment)jumpToFragment;
+//                bookFragment.initMap();
+//                (BookFragment)jumpToFragment.initMap();
+//                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                //文章fragment--newFragment完全取代容器上的一个fragment
+//                transaction.replace(R.id.fragment_container, myFragment,"fragmentTag");
+//                transaction.commit();
+//                guillotineAnimation.close();
+//                return;
                 break;
             case R.id.mission_group:
                 ((TextView) findViewById(R.id.titleBar)).setText("记录");
@@ -188,11 +203,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             "扫描结果： " + bundle.getString("result"),
                             Toast.LENGTH_SHORT).show(); // 输出例子书架提醒
 //                    fragmentManager = getSupportFragmentManager();
-                    BookFragment bookFragment = (BookFragment)getSupportFragmentManager().findFragmentByTag("fragmentTag");
+//                    BookFragment bookFragment = (BookFragment)getSupportFragmentManager().findFragmentByTag("fragmentTag");
 
-//                    BookFragment bookFragment = (BookFragment)myFragment;
-//                    bookFragment.addPoint(bundle.getString("result"), 0);
-                    bookFragment.endPoint = bundle.getString("result");
+                    BookFragment bookFragment = (BookFragment)myFragment;
+                    bookFragment.addPoint(bundle.getString("result"), 0);
+//                    bookFragment.endPoint = bundle.getString("result");
                 }
 
                 break;
@@ -202,10 +217,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this,
                             "所在书架： " + bundle.getString("slf_name"),
                             Toast.LENGTH_SHORT).show(); // 输出例子书架提醒
-//                    BookFragment bookFragment = (BookFragment)myFragment;
-                    BookFragment bookFragment = (BookFragment)getSupportFragmentManager().findFragmentByTag("fragmentTag");
-//                    bookFragment.addPoint(bundle.getString("slf_name"), 1);
-                    bookFragment.endPoint = bundle.getString("slf_name");
+                    BookFragment bookFragment = (BookFragment)myFragment;
+//                    BookFragment bookFragment = (BookFragment)getSupportFragmentManager().findFragmentByTag("fragmentTag");
+                    bookFragment.addPoint(bundle.getString("slf_name"), 1);
+//                    bookFragment.endPoint = bundle.getString("slf_name");
                 }
                 break;
         }
