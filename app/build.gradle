@@ -1,0 +1,76 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+       // classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
+    }
+}
+
+
+apply plugin: 'com.android.application'
+//apply plugin: 'com.neenbedankt.android-apt'
+
+android {
+
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        applicationId "com.cczq.booksearch"
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+//定义了一个maven目的是为了添加ParticleView
+repositories {
+    maven {
+        url 'https://dl.bintray.com/wangyuwei/maven'
+    }
+    mavenCentral()
+    maven {
+        url "https://jitpack.io"
+    }
+
+    maven {
+        url 'http://dl.bintray.com/amulyakhare/maven'
+    }
+
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    compile 'me.wangyuwei:ParticleView:1.0.4'
+    compile 'com.jakewharton:butterknife:8.4.0'
+//    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'cn.pedant.sweetalert:library:1.3'
+    compile 'com.github.iwgang:countdownview:2.1.2'
+    compile 'com.github.eluleci:flatui:3.0.0'
+    // compile 'com.github.anzewei:parallaxbacklayout:0.4'
+    compile 'com.github.feeeei:CircleSeekbar:v1.1.1'
+
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
+    compile 'com.yalantis:contextmenu:1.0.7'
+    compile 'com.getbase:floatingactionbutton:1.10.1'
+
+}

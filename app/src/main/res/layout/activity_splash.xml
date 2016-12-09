@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:pv="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="match_parent">
+
+<me.wangyuwei.particleview.ParticleView
+    android:id = "@+id/particleView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0867AB"
+    pv:pv_host_text="Book"
+    pv:pv_particle_text="Search"
+    pv:pv_text_anim_time="700"
+    pv:pv_spread_anim_time="500"
+    pv:pv_host_text_anim_time="900" />
+
+</LinearLayout>
