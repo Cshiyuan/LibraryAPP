@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
 
-    private final static int SCANNIN_GREQUEST_CODE = 1;
+     private final static int SCANNIN_GREQUEST_CODE = 1;
     private final static int BOOKLIST_GREQUEST_CODE = 2;
 
     private static final long RIPPLE_DURATION = 250;
